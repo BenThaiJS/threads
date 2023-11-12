@@ -16,6 +16,7 @@ const Page = async ({params}: {params: {id:string}}) => {
 
     const thread = await fetchThreadById(params.id);
 
+
     return (
         <section className="relative">
         <div>
@@ -44,7 +45,7 @@ const Page = async ({params}: {params: {id:string}}) => {
                 <ThreadCard
                     key={childItem._id}
                     id={childItem._id}
-                    currentUserId={user?.id || ""}
+                    currentUserId={user.id}
                     parentId={childItem.parentId}
                     content={childItem.text}
                     author={childItem.author}
