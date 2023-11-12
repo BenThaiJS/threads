@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePathname, useRouter } from "next/navigation";
 import { ThreadValidation } from "@/lib/validations/thread";
 import { createThread } from "@/lib/actions/thread.actions";
+import { useOrganization } from "@clerk/nextjs";
 
 interface Props {
     userId: string;
@@ -25,7 +26,8 @@ interface Props {
 function PostThread({userId} : Props) {
     const router = useRouter();
     const pathname = usePathname();
-
+    const { organization } = useOrganization();
+    
     const form = useForm({
         resolver: zodResolver(ThreadValidation),
         defaultValues: {
@@ -38,7 +40,7 @@ function PostThread({userId} : Props) {
         await createThread({
             text: values.thread,
             author: userId,
-            communityId: null,
+            communityId: organization ? organization.id : null,
             path: pathname
         });
 
