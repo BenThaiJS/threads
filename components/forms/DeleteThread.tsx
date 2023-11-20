@@ -7,7 +7,7 @@ import { deleteThread } from "@/lib/actions/thread.actions";
 
 interface Props {
   threadId: string;
-  currentUserId: string;
+  currentClerkId: string;
   authorId: string;
   parentId: string | null;
   isComment?: boolean;
@@ -15,7 +15,7 @@ interface Props {
 
 function DeleteThread({
   threadId,
-  currentUserId,
+  currentClerkId,
   authorId,
   parentId,
   isComment,
@@ -23,7 +23,7 @@ function DeleteThread({
   const pathname = usePathname();
   const router = useRouter();
 
-  if (currentUserId !== authorId || pathname === "/") return null;
+  if (currentClerkId !== authorId || pathname === "/") return null;
 
   return (
     <Image

@@ -6,23 +6,27 @@ import Image from "next/image";
 import ThreadsTab from "@/components/shared/ThreadsTab";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import UserCard from "@/components/cards/UserCard";
+import { fetchUser } from "@/lib/actions/user.actions";
+import { redirect } from "next/navigation";
 
 async function Page({params}: {params: {id: string}}) {
     const user = await currentUser();
     if(!user) return null;
 
+    const userInfo = await fetchUser(user.id)
+    if(!userInfo?.onboarded) redirect('/onboarding');
     const communityDetails = await fetchCommunityDetails(params.id);
 
   return (
     <section>
         <ProfileHeader
-        accountId={communityDetails.id}
-        authUserId={user.id} 
-        name={communityDetails.name}
-        username={communityDetails.username}
-        imgUrl={communityDetails.image}
-        bio={communityDetails.bio}
-        type="Community"
+            accountId={communityDetails.id}
+            authUserId={user.id} 
+            name={communityDetails.name}
+            username={communityDetails.username}
+            imgUrl={communityDetails.image}
+            bio={communityDetails.bio}
+            type="Community"
         />
     
     <div className="mt-9">
@@ -49,7 +53,8 @@ async function Page({params}: {params: {id: string}}) {
             </TabsList>
                 <TabsContent value="threads" className="w-full text-light-1">
                     <ThreadsTab 
-                        currentUserId={user.id}
+                        currentClerkId={user.id}
+                        currentMongId={userInfo?._id.toString()}
                         accountId={communityDetails._id}
                         accountType="Community"
                     />
@@ -64,13 +69,14 @@ async function Page({params}: {params: {id: string}}) {
                                         username={member.username}
                                         imgUrl={member.image}
                                         personType="User"
-                                    ></UserCard>
+                                    />
                                 ))}
                     </section>
                 </TabsContent>
                 <TabsContent value="requests" className="w-full text-light-1">
                     <ThreadsTab 
-                        currentUserId={user.id}
+                        currentClerkId={user.id}
+                        currentMongId={userInfo?._id.toString()}
                         accountId={communityDetails._id}
                         accountType="Community"
                     />

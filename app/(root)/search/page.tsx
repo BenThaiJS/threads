@@ -25,8 +25,6 @@ async function Page({
     pageSize: 25,
   });
 
-  console.log(1111, result)
-
   return (
     <section>
       <h1 className='head-text mb-10'>Search</h1>

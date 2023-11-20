@@ -3,10 +3,12 @@ import Link from "next/link";
 
 import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
+import LikeThread from "../forms/LikeThread";
 
 interface Props {
   id: string;
-  currentUserId: string;
+  currentMongId: string;
+  currentClerkId: string;
   parentId: string | null;
   content: string;
   author: {
@@ -30,7 +32,8 @@ interface Props {
 
 function ThreadCard({
   id,
-  currentUserId,
+  currentMongId,
+  currentClerkId,
   parentId,
   content,
   author,
@@ -71,12 +74,9 @@ function ThreadCard({
 
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className='flex gap-3.5'>
-                <Image
-                  src='/assets/heart-gray.svg'
-                  alt='heart'
-                  width={24}
-                  height={24}
-                  className='cursor-pointer object-contain'
+                <LikeThread
+                  threadId={JSON.stringify(id)}
+                  currentMongId={currentMongId}
                 />
                 <Link href={`/thread/${id}`}>
                   <Image
@@ -116,7 +116,7 @@ function ThreadCard({
 
         <DeleteThread
           threadId={JSON.stringify(id)}
-          currentUserId={currentUserId}
+          currentClerkId={currentClerkId}
           authorId={author.id}
           parentId={parentId}
           isComment={isComment}

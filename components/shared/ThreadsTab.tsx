@@ -4,12 +4,13 @@ import ThreadCard from "../cards/ThreadCard";
 import { fetchCommunityPosts } from "@/lib/actions/community.actions";
 
 interface Props {
-    currentUserId: string;
+    currentClerkId: string;
+    currentMongId: string;
     accountId: string;
     accountType: string;
 }
 
-const ThreadsTab = async ({currentUserId, accountId, accountType}: Props) => {
+const ThreadsTab = async ({currentMongId, currentClerkId, accountId, accountType}: Props) => {
     let result: any;
 
     if(accountType === 'Community') {
@@ -27,7 +28,8 @@ const ThreadsTab = async ({currentUserId, accountId, accountType}: Props) => {
                 <ThreadCard
                     key={thread._id}
                     id={thread._id}
-                    currentUserId={currentUserId}
+                    currentMongId={currentMongId}
+                    currentClerkId={currentClerkId}
                     parentId={thread.parentId}
                     content={thread.text}
                     author={

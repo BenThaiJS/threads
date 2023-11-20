@@ -238,3 +238,56 @@ export async function addCommentToThread(
     throw new Error("Unable to add comment");
   }
 }
+
+export async function likeThread(threadId: string, currentMongId: string) {
+  try {
+    connectToDB();
+    // Get the thread from the database
+    const thread = await Thread.findById(threadId);
+    if(!thread) {
+      throw new Error("Thread not found")
+    }
+
+    const userLikedIndex = thread.likes.indexOf(currentMongId);
+
+    if (userLikedIndex === -1) {
+      // Add the user to the likes array in the thread model
+      thread.likes.push(currentMongId);
+      await thread.save();
+
+      // Add the liked thread to the likes array in the user model
+      const user = await User.findByIdAndUpdate(currentMongId, {
+        $push: { likes: thread._id },
+      });
+    } else {
+      // Remove the user from the likes array in the thread model
+      thread.likes.splice(userLikedIndex, 1);
+      await thread.save();
+
+      // Remove the unliked thread from the likes array in the user model
+      const user = await User.findByIdAndUpdate(currentMongId, {
+        $pull: { likes: thread._id },
+      });
+    }
+  } catch(error:any) {
+    throw new Error(`Unable to like thread: ${error.message}`)
+  }
+}
+
+export async function fetchUserLikes(threadId: string, currentMongId: string) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findById(threadId);
+    if(!thread) {
+      throw new Error("Thread not found")
+    }
+
+    // Check if currentMongId is in the likes array
+    const isLiked = thread.likes.includes(currentMongId);
+    
+    return isLiked;
+  } catch(error: any) {
+    throw new Error(`Unable to fetch likes: ${error.message}`);
+  }
+}
